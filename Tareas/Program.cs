@@ -3,15 +3,33 @@ using System;
 using System.Text.Json;
 using System.Net.WebSockets;
 
+string estadoDeLaTarea;
 var listTareas = await GetTareasAsync();
-
-Console.WriteLine("-----------------------------");
-Console.WriteLine("Tareas");
+Console.WriteLine("===Tareas===");
+Console.WriteLine("---Tareas Pendientes---");
 foreach (var T in listTareas)
 {
-    Console.WriteLine("ID de usuario: " + T.userId + " - ID: " + T.id + " - Titulo: " + T.title + " - Completado: " + T.completed);
+    if (T.completed == false)
+    {
+        estadoDeLaTarea = "pendiente";
+        Console.WriteLine("Titulo: " + T.title + " - Estado: " + estadoDeLaTarea);
+
+    }
+}
+Console.WriteLine("---Tareas Completadas---");
+foreach (var T in listTareas)
+{
+    if (T.completed == true)
+    {
+        estadoDeLaTarea = "completada";
+        Console.WriteLine("Titulo: " + T.title + " - Estado: " + estadoDeLaTarea);
+    }
 }
 
+ string jsonString = JsonSerializer.Serialize(listTareas);
+ File.WriteAllText("tareas.json", jsonString);
+ 
+            
 
 static async Task<List<Tarea>> GetTareasAsync()
 {
